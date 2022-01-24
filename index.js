@@ -1,15 +1,24 @@
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 const passport = require('passport')
 const User = require('./models/user');
-var LocalStrategy = require('passport-local');
+const LocalStrategy = require('passport-local');
+const flash = require('connect-flash');
+const session = require('express-session')
+const app = express();
 
 mongoose.connect('mongodb://localhost:27017/service' , () => {
     console.log("Database Connection");
 });
 
 app.use(require('body-parser').urlencoded({ extended: true }));
+app.set('view engine' , 'ejs');
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+}))
 
 
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
@@ -19,10 +28,18 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.set('view engine' , 'ejs');
+app.use(flash());
+app.use(function(req,res,next){
+    res.locals.sucess_msg = req.flash(('sucess_msg'));
+    res.locals.error_msg = req.flash(('error_msg'));
+    res.locals.login_error = req.flash(('login_error'));
+    res.locals.currentUser = req.user;
+    next();
+})
 
-const useRoute = require('./routes/auth');
-app.use('/user',useRoute);
+
+const userRoute = require('./routes/auth');
+app.use('/user',userRoute);
 
 app.get('*' , function(req,res){
     return res.redirect('/user/login');

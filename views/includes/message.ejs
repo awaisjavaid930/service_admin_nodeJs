@@ -1,0 +1,16 @@
+<% if (sucess_msg != '') { %>
+    <div class="alert alert-primary" role="alert">
+        <%= sucess_msg  %> 
+    </div>
+<% } %>
+<% if (error_msg != '') { %>
+<div class="alert alert-danger" role="alert">
+    <%= error_msg  %>
+</div>
+<% } %>
+
+<% if (login_error != '') { %>
+    <div class="alert alert-danger" role="alert">
+        <%= login_error  %>
+    </div>
+<% } %>

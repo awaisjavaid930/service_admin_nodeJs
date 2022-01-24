@@ -2,18 +2,18 @@
     <div class="container">
         <%- include('../includes/navbar')  %> 
         <%- include('../includes/heading')  %> 
-        <form>
+        <%- include('../includes/message')  %> 
+        <form action="/user/login" method="post">
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                <input type="email" name="username" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleFormControlInput1" placeholder="password">
-        </div>
+                <input type="password" name="password" class="form-control" id="exampleFormControlInput1" placeholder="password">
+            </div>
         <input type="submit" class="btn btn-primary" value="Login" />
         <a href="/user/register" class="btn btn-primary" tabindex="-1" role="button">Register</a>
-
         </form>
         
     </div>

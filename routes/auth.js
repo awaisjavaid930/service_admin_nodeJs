@@ -19,17 +19,35 @@ router.post('/store' , (req , res ) =>{
             status : "inactive",
             username : username,
         }
+        
         User.register( userData, password , function(err, user) {
             if (err) { 
-                return res.redirect('/register');
+                req.flash('error_msg', err.message )
+                return res.redirect('/user/register');
             }
-            passport.authenticate('local')(req,res,() => {
-                return res.redirect('/login');
-            });
+            if (user){
+                req.flash('sucess_msg', "Register successfully" )
+                return res.redirect('/user/login');   
+            }
+            // passport.authenticate('local')(req,res,() => {
+                // req.flash('sucess_msg', "Register successfully" )
+                // return res.redirect('/user/login');
+            // });
         });    
     } catch (error) {
         return res.status(404);
     }    
+})
+
+router.post('/login', 
+  passport.authenticate('local', { failureRedirect: '/user/login', failureFlash: 'invalid username or password' }),
+  function(req, res) {
+    return res.send('/user/dashboard');
+});
+
+router.get('/dashboard' , function(req , res ) {
+    req.flash('sucess_msg', "Login Successfully" )
+    return res.render('dashboard/index');
 })
 
 module.exports = router;
