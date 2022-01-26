@@ -6,6 +6,7 @@ const LocalStrategy = require('passport-local');
 const flash = require('connect-flash');
 const session = require('express-session')
 const app = express();
+const authenticatedRoute = require('./middleware/auth')
 
 mongoose.connect('mongodb://localhost:27017/service' , () => {
     console.log("Database Connection");
@@ -20,7 +21,6 @@ app.use(session({
     saveUninitialized: true,
 }))
 
-
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -30,13 +30,13 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(flash());
 app.use(function(req,res,next){
-    res.locals.sucess_msg = req.flash(('sucess_msg'));
-    res.locals.error_msg = req.flash(('error_msg'));
-    res.locals.login_error = req.flash(('login_error'));
-    res.locals.currentUser = req.user;
+    res.locals.sucess_msg   = req.flash(('sucess_msg'));
+    res.locals.error_msg    = req.flash(('error_msg'));
+    res.locals.error        = req.flash(('error')); // always same
+    res.locals.currentUser  = req.user;
     next();
 })
-
+app.use(authenticatedRoute);
 
 const userRoute = require('./routes/auth');
 app.use('/user',userRoute);

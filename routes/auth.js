@@ -1,11 +1,10 @@
 const express   = require("express");
+const req = require("express/lib/request");
 const router    = express.Router();
 const passport  = require("passport");
 const User      = require('../models/user');
 
-router.get('/login' , (req , res ) =>{
-    return res.render('auth/login');
-})
+
 
 router.get('/register' , (req , res ) =>{
     return res.render('auth/register');
@@ -39,10 +38,30 @@ router.post('/store' , (req , res ) =>{
     }    
 })
 
-router.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/user/login', failureFlash: 'invalid username or password' }),
-  function(req, res) {
-    return res.send('/user/dashboard');
+router.post('/login', passport.authenticate('local', { 
+    failureRedirect: '/user/login',
+    failureFlash: 'invalid username or password',
+    }),
+    function(req, res) {
+    return res.redirect('/user/dashboard');
+});
+
+
+function checkAuthentication(req,res,next){
+    if(req.isAuthenticated()){
+        next();
+    } else{
+        res.redirect("/user/login");
+    }
+}
+
+router.get('/login' , (req , res ) =>{
+    return res.render('auth/login');
+})
+router.get('/logout', checkAuthentication ,function(req, res){
+    req.logout();
+    req.flash('sucess_msg', "Logout Successfully" )
+    return res.redirect('/user/login');
 });
 
 router.get('/dashboard' , function(req , res ) {
