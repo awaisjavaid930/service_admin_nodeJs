@@ -36,10 +36,22 @@ app.use(function(req,res,next){
     res.locals.currentUser  = req.user;
     next();
 })
+
 app.use(authenticatedRoute);
 
 const userRoute = require('./routes/auth');
+const providerRoute = require('./routes/provider_service');
+const bookingRouter = require('./routes/booking');
+const couponRouter = require('./routes/coupon');
+const themeRouter = require('./routes/theme');
+const roleRouter = require('./routes/role');
 app.use('/user',userRoute);
+app.use('/provider', providerRoute);
+app.use('/booking', bookingRouter);
+app.use('/coupon' , couponRouter);
+app.use('/theme' ,  themeRouter);
+app.use('/role',roleRouter);
+
 
 app.get('*' , function(req,res){
     return res.redirect('/user/login');

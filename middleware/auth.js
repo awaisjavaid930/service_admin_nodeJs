@@ -3,12 +3,13 @@ const app = express();
 
 function authenticatedRoute(req , res , next)
 {
-    if(req.originalUrl == '/user/login'){
+    if (req.originalUrl == '/user/login' || req.originalUrl == '/user/register') {
         next();
-    }else{
+    } else {
         if (req.isAuthenticated()) {
             next();
-        }else{
+        } else {
+            req.flash('error_msg', 'please login first' )
             return res.redirect('/user/login');
         }
     }

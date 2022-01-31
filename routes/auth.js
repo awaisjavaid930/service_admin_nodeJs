@@ -4,8 +4,6 @@ const router    = express.Router();
 const passport  = require("passport");
 const User      = require('../models/user');
 
-
-
 router.get('/register' , (req , res ) =>{
     return res.render('auth/register');
 })
@@ -64,9 +62,14 @@ router.get('/logout', checkAuthentication ,function(req, res){
     return res.redirect('/user/login');
 });
 
+
+router.get('/list' , function(req , res ) {
+    return res.render('user/index');
+})
+
 router.get('/dashboard' , function(req , res ) {
-    req.flash('sucess_msg', "Login Successfully" )
     return res.render('dashboard/index');
 })
+
 
 module.exports = router;
